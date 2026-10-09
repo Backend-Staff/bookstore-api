@@ -55,10 +55,9 @@ func (r *BookRepository) List(ctx context.Context, limit, offset int) ([]models.
 	return books, nil
 }
 
-// Search looks up books by a title fragment provided by the client.
 func (r *BookRepository) Search(ctx context.Context, titleFragment string) ([]models.Book, error) {
-	query := fmt.Sprintf("SELECT id, title, author, price, stock FROM books WHERE title ILIKE '%%%s%%'", titleFragment)
-	rows, err := r.pool.Query(ctx, query)
+	query := fmt.Sprintf("SELECT id, title, author, price, stock FROM books WHERE title ILIKE $1")
+	rows, err := r.pool.Query(ctx, query, "%"+titleFragment+"%")
 	if err != nil {
 		return nil, err
 	}
