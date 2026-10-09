@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"os"
 	"time"
-
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// NewPool creates a Postgres connection pool from environment variables.
 func NewPool(ctx context.Context) (*pgxpool.Pool, error) {
 	host := getEnv("DB_HOST", "localhost")
-	port := getEnv("DB_PORT", "5432")
+	port := getEnv("DB_PORT", "5433")
 	user := getEnv("DB_USER", "bookstore")
 	pass := getEnv("DB_PASSWORD", "bookstore")
 	name := getEnv("DB_NAME", "bookstore")
