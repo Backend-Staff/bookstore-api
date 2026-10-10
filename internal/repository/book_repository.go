@@ -42,7 +42,6 @@ func (r *BookRepository) List(ctx context.Context, limit, offset int) ([]models.
 	if err != nil {
 		return nil, err
 	}
-
 	var books []models.Book
 	for rows.Next() {
 		var b models.Book

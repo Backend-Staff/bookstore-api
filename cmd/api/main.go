@@ -9,11 +9,17 @@ import (
 	"bookstore-api/internal/handlers"
 	"bookstore-api/internal/middleware"
 	"bookstore-api/internal/repository"
+	"github.com/joho/godotenv"
 
 	"github.com/go-chi/chi/v5"
 )
 
 func main() {
+
+	if err := godotenv.Load(); err != nil {
+		log.Println("no .env file found, relying on real environment variables")
+	}
+
 	ctx := context.Background()
 
 	pool, err := db.NewPool(ctx)

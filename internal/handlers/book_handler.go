@@ -71,7 +71,7 @@ func (h *BookHandler) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	offset := page * limit
+	offset := (page - 1) * limit // 0
 
 	books, err := h.repo.List(r.Context(), limit, offset)
 	if err != nil {
