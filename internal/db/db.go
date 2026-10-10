@@ -9,7 +9,7 @@ import (
 )
 
 func NewPool(ctx context.Context) (*pgxpool.Pool, error) {
-	host := getEnv("DB_HOST", "localhost")
+	host := getEnv("DB_HOST", "127.0.0.1")
 	port := getEnv("DB_PORT", "5433")
 	user := getEnv("DB_USER", "bookstore")
 	pass := getEnv("DB_PASSWORD", "bookstore")
