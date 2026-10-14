@@ -48,6 +48,7 @@ func (h *BookHandler) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	book, err := h.repo.GetByID(r.Context(), id)
+	 
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
@@ -71,7 +72,7 @@ func (h *BookHandler) List(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	offset := (page - 1) * limit // 0
+	offset := (page - 1) * limit 
 
 	books, err := h.repo.List(r.Context(), limit, offset)
 	if err != nil {
@@ -85,6 +86,10 @@ func (h *BookHandler) List(w http.ResponseWriter, r *http.Request) {
 func (h *BookHandler) Search(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query().Get("q")
 	books, err := h.repo.Search(r.Context(), q)
+	if len(books) == 0 {
+		writeJSON(w, http.StatusNotFound, map[string]string{"error": "no books found"})
+		return
+	}
 	if err != nil {
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": err.Error()})
 		return
