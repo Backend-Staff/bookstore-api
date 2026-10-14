@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"errors"
 	"bookstore-api/internal/models"
 
 	"github.com/jackc/pgx/v5"
@@ -24,15 +25,26 @@ func (r *BookRepository) Create(ctx context.Context, b *models.Book) error {
 }
 
 func (r *BookRepository) GetByID(ctx context.Context, id int64) (*models.Book, error) {
-	query := `SELECT id, title, author, price, stock FROM books WHERE id = $1`
-	row := r.pool.QueryRow(ctx, query, id)
+    query := `SELECT id, title, author, price, stock FROM books WHERE id = $1`
 
-	var b models.Book
-	// BUG CANDIDATE AREA: no error handling branch distinguishing "not found" from
-	// other errors before using b below.
-	row.Scan(&b.ID, &b.Title, &b.Author, &b.Price, &b.Stock)
+    var b models.Book
 
-	return &b, nil
+    err := r.pool.QueryRow(ctx, query, id).Scan(
+        &b.ID,
+        &b.Title,
+        &b.Author,
+        &b.Price,
+        &b.Stock,
+    )
+
+    if err != nil {
+        if errors.Is(err, pgx.ErrNoRows) {
+            return nil, fmt.Errorf("book with ID %d not found", id)
+        }
+        return nil, err
+    }
+
+    return &b, nil
 }
 
 // List returns a page of books ordered by id.
